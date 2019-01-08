@@ -1,5 +1,6 @@
 package com.bf.io;
 
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
@@ -16,10 +17,11 @@ import java.util.List;
  */
 public class S3Test {
     public static void main(String[] args) {
-        String bucket = "your-bucket-name";
-        String s3Key = "test-multiparts-upload.txt";
+        String bucket = "com.bf2";
+        String s3Key = "100.txt";
 
-        AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
+
+        AmazonS3 s3Client = AmazonS3ClientBuilder.standard().withRegion(Regions.CN_NORTHWEST_1).build();
 
         // 创建一个列表保存所有分传的 PartETag, 在分段完成后会用到
         List<PartETag> partETags = new ArrayList<>();
@@ -28,10 +30,11 @@ public class S3Test {
         InitiateMultipartUploadRequest initRequest = new InitiateMultipartUploadRequest(bucket, s3Key);
         InitiateMultipartUploadResult initResponse = s3Client.initiateMultipartUpload(initRequest);
 
-        int minPartSize = 5 * 1024 * 1024; //分段大小在 5MB - 5GB 之间，只有最后一个分段才允许小于 5MB，不可避免的
+        int minPartSize = 10 * 1024 * 1024; //分段大小在 5MB - 5GB 之间，只有最后一个分段才允许小于 5MB，不可避免的
 
         try {
-            for (int i = 1; i < 100; i++) {
+            for (int i = 1; i < 1002; i++) {
+                System.out.println("第" + i + "段");
                 byte[] bytes = RandomStringUtils.randomAlphabetic(minPartSize).getBytes(); //填充一个 5MB 的字符串
 
                 UploadPartRequest uploadRequest = new UploadPartRequest()

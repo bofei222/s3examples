@@ -39,7 +39,7 @@ public class ListBuckets
 {
     public static void main(String[] args)
     {
-        AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.AP_NORTHEAST_1).build();
+        AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.CN_NORTH_1).build();
 //                .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
 //        BasicAWSCredentials awsCreds = new BasicAWSCredentials("access_key_id", "secret_key_id");
 

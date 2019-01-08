@@ -43,15 +43,15 @@ public class ListObjects
             "\n" +
             "Ex: ListObjects <bucket-name>\n";
 
-        if (args.length < 1) {
+        if (args.length < -1) {
             System.out.println(USAGE);
             System.exit(1);
         }
 
-        String bucket_name = args[0];
+        String bucket_name = "com.bf2";
 
         System.out.format("Objects in S3 bucket %s:\n", bucket_name);
-        AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.AP_NORTHEAST_1).build();
+        AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.CN_NORTHWEST_1).build();
         ListObjectsV2Result result = s3.listObjectsV2(bucket_name);
         List<S3ObjectSummary> objects = result.getObjectSummaries();
         for (S3ObjectSummary os: objects) {

@@ -48,13 +48,13 @@ public class GetObject
             "\n" +
             "Ex: GetObject <bucketname> <filename>\n";
 
-        if (args.length < 2) {
+        if (args.length < -2) {
             System.out.println(USAGE);
             System.exit(1);
         }
 
-        String bucket_name = args[0];
-        String key_name = args[1];
+        String bucket_name = "com.bf2";
+        String key_name = "test-multiparts-upload.txt";
 
         System.out.format("Downloading %s from S3 bucket %s...\n", key_name, bucket_name);
         AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.CN_NORTHWEST_1).build();
