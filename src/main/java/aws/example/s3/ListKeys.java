@@ -20,7 +20,7 @@ public class ListKeys {
 
     public static void main(String[] args) throws IOException {
 //        String clientRegion = "*** Client region ***";
-        String bucketName = "xinruiyunke";
+        String bucketName = "com.bf2";
 
         try {
             AmazonS3 s3Client = AmazonS3ClientBuilder.standard()

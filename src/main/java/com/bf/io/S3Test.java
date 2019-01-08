@@ -18,7 +18,7 @@ import java.util.List;
 public class S3Test {
     public static void main(String[] args) {
         String bucket = "com.bf2";
-        String s3Key = "100.txt";
+        String s3Key = "2个5M.txt";
 
 
         AmazonS3 s3Client = AmazonS3ClientBuilder.standard().withRegion(Regions.CN_NORTHWEST_1).build();
@@ -33,7 +33,7 @@ public class S3Test {
         int minPartSize = 10 * 1024 * 1024; //分段大小在 5MB - 5GB 之间，只有最后一个分段才允许小于 5MB，不可避免的
 
         try {
-            for (int i = 1; i < 1002; i++) {
+            for (int i = 1; i < 3; i++) {
                 System.out.println("第" + i + "段");
                 byte[] bytes = RandomStringUtils.randomAlphabetic(minPartSize).getBytes(); //填充一个 5MB 的字符串
 
