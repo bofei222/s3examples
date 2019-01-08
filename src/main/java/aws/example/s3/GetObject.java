@@ -53,11 +53,11 @@ public class GetObject
             System.exit(1);
         }
 
-        String bucket_name = "com.bf2";
-        String key_name = "test-multiparts-upload.txt";
+        String bucket_name = "com.bf";
+        String key_name = "图片/杰尼龟.jpg";
 
         System.out.format("Downloading %s from S3 bucket %s...\n", key_name, bucket_name);
-        AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.CN_NORTHWEST_1).build();
+        AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.AP_NORTHEAST_1).build();
         try {
             S3Object o = s3.getObject(bucket_name, key_name);
             S3ObjectInputStream s3is = o.getObjectContent();
