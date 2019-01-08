@@ -25,6 +25,10 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.nio.file.Paths;
 
@@ -44,19 +48,27 @@ public class PutObject
             "\n" +
             "Ex: PutObject <bucketname> <filename>\n";
 
-        if (args.length < 2) {
+        if (args.length < -2) {
             System.out.println(USAGE);
             System.exit(1);
         }
 
-        String bucket_name = args[0];
-        String file_path = args[1];
+        String bucket_name = "com.bf";
+        String file_path = "";
         String key_name = Paths.get(file_path).getFileName().toString();
 
         System.out.format("Uploading %s to S3 bucket %s...\n", file_path, bucket_name);
-        AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.CN_NORTHWEST_1).build();
+        AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.AP_NORTHEAST_1).build();
         try {
-            s3.putObject(bucket_name, key_name, new File(file_path));
+//            s3.putObject(bucket_name, key_name, new File(file_path));
+            String str = "!!hello everybody!";
+            byte[] words = str.getBytes();
+
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(words.length);
+
+            s3.putObject("com.bf", "456.txt", new ByteArrayInputStream(words), metadata);
+
         } catch (AmazonServiceException e) {
             System.err.println(e.getErrorMessage());
             System.exit(1);
