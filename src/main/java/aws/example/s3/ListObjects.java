@@ -51,7 +51,7 @@ public class ListObjects
         String bucket_name = args[0];
 
         System.out.format("Objects in S3 bucket %s:\n", bucket_name);
-        AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.CN_NORTHWEST_1).build();
+        AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.AP_NORTHEAST_1).build();
         ListObjectsV2Result result = s3.listObjectsV2(bucket_name);
         List<S3ObjectSummary> objects = result.getObjectSummaries();
         for (S3ObjectSummary os: objects) {
