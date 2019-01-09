@@ -47,23 +47,23 @@ public class Test2 {
 
     public static void main(String[] args) throws FileNotFoundException {
 
-        File file = new File("f:/test");
-        file.mkdirs();
-        File file2 = new File(file + "/1.txt");
-        if (!file2.exists()) {
-            try {
-                file2.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        new FileInputStream(file2);
-
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        File file = new File("c:/test2/bofei/1.txt");
+//        file.mkdirs();
+//        File file2 = new File(file + "/1.txt");
+//        if (!file2.exists()) {
+//            try {
+//                file2.createNewFile();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        new FileInputStream(file2);
+//
+//        try {
+//            file.createNewFile();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public static void main4(String[] args) {

@@ -9,7 +9,6 @@ import java.util.ResourceBundle;
 public class StorageConfig {
     private String propertiesName;
 
-    private String filePath;
     private String dirPath;
 
     private String clientRegion;
@@ -18,15 +17,6 @@ public class StorageConfig {
 
     public StorageConfig(String propertiesName) {
         this.propertiesName = propertiesName;
-    }
-
-
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
     }
 
     public String getDirPath() {
@@ -65,7 +55,6 @@ public class StorageConfig {
     public String toString() {
         return "StorageConfig{" +
                 "propertiesName='" + propertiesName + '\'' +
-                ", filePath='" + filePath + '\'' +
                 ", dirPath='" + dirPath + '\'' +
                 ", clientRegion='" + clientRegion + '\'' +
                 ", bucketName='" + bucketName + '\'' +
@@ -75,7 +64,6 @@ public class StorageConfig {
 
     public Boolean init() {
         ResourceBundle rb = ResourceBundle.getBundle(propertiesName.trim());
-        if (rb.containsKey("filePath")) filePath = rb.getString("filePath");
         if (rb.containsKey("dirPath")) dirPath = rb.getString("dirPath");
 
         if (rb.containsKey("clientRegion")) clientRegion = rb.getString("clientRegion");

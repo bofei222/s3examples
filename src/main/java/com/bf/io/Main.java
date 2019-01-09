@@ -11,22 +11,23 @@ import org.omg.CORBA.IntHolder;
 public class Main {
     // read
     // 读指定偏移量off、期望长度的数据size的，实际长度length的数据
-    public static void main2(String[] args) {
+    public static void main(String[] args) {
         StorageConfig storageConfig = new StorageConfig("fs");
         storageConfig.init();
         ToFS toFS = new ToFS(storageConfig);
 
-        toFS.open("0", "r");
+        toFS.open("zxcvbnm", "r");
         byte[] b = new byte[100];
         IntHolder length = new IntHolder();
 
-        boolean read = toFS.read(b, 2, 1, length);
+        boolean read = toFS.read(b, 2, 10, length);
         System.out.println(length.value);
+        System.out.println(read);
         System.out.println(new String(b));
     }
 
     // write
-    public static void main(String[] args) {
+    public static void main2(String[] args) {
         String s = "123456";
         int minPartSize = 10 * 1024 * 1024;
         byte[] bytes = s.getBytes();
@@ -37,7 +38,8 @@ public class Main {
         ToFS toFS = new ToFS(storageConfig);
         boolean open = toFS.open("zxcvbnm", "w");
         IntHolder length = new IntHolder();
-        toFS.write(bytes, 2, 3, length);
+        boolean write = toFS.write(bytes, 3, 3, length);
+        System.out.println(write);
         System.out.println(length.value);
 
     }

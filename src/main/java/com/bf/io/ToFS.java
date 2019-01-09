@@ -22,11 +22,11 @@ public class ToFS implements StorageFile{
 
     @Override
     public boolean open(String id, String flag) {
+        String hash = MyUtil.hash(id);
+        File dir = new File(storageConfig.getDirPath() + File.separator + hash);
+        file = new File(dir + File.separator + id);
         if ("w".equals(flag)) {
-            String hash = MyUtil.hash(id);
-            File dir = new File(storageConfig.getDirPath() + File.separator + hash);
             dir.mkdirs();
-            file = new File(dir + File.separator + id);
             if (!file.exists()) {
                 try {
                     file.createNewFile();
@@ -36,31 +36,26 @@ public class ToFS implements StorageFile{
             }
             return true;
         } else {
-            file = new File(storageConfig.getFilePath());
             return true;
         }
     }
 
     @Override
     public boolean read(byte[] data, long off, long size, IntHolder length) {
+        if (size > data.length) {
+            return false;
+        }
+        boolean flag = true;
         RandomAccessFile raf = null;
         try {
             raf = new RandomAccessFile(file, "rw");
             raf.seek(off);
-            int length1 = (int)file.length();
-            byte[] bytes = null;
-            if (size > (length1 - off)) {
-                bytes = new byte[(int)(length1 - off)];
-            } else {
-                bytes = new byte[(int)size];
-            }
-            raf.read(bytes);
-//            System.out.println(new String(bytes));
-            length.value = bytes.length;
 
-            System.arraycopy(bytes, 0, data, 0, bytes.length);
+            int read = raf.read(data, 0, (int) size);
+            length.value = read;
         } catch (IOException e) {
             e.printStackTrace();
+            flag = false;
         }finally {
             try {
                 if (raf != null) {
@@ -69,23 +64,25 @@ public class ToFS implements StorageFile{
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return true;
+            return flag;
         }
     }
 
     @Override
     public boolean write(byte[] data, long off, long size, IntHolder length) {
+        if (size > data.length) {
+            return false;
+        }
+        boolean flag = true;
         RandomAccessFile raf = null;
         try {
             raf = new RandomAccessFile(file, "rw");
-            byte[] bytes = new byte[(int)size];
-            System.arraycopy(data, 0, bytes, 0, bytes.length);
-
             raf.seek(off);
-            raf.write(bytes);
-            length.value = bytes.length;
+            raf.write(data, 0, (int)size);
+            length.value = (int)size;
         } catch (IOException e) {
             e.printStackTrace();
+            flag = false;
         } finally {
             try {
                 if (raf != null) {
@@ -94,7 +91,7 @@ public class ToFS implements StorageFile{
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return true;
+            return flag;
         }
     }
 
