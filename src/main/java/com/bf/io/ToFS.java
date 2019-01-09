@@ -75,8 +75,9 @@ public class ToFS implements StorageFile{
 
     @Override
     public boolean write(byte[] data, long off, long size, IntHolder length) {
+        RandomAccessFile raf = null;
         try {
-            RandomAccessFile raf = new RandomAccessFile(file, "rw");
+            raf = new RandomAccessFile(file, "rw");
             byte[] bytes = new byte[(int)size];
             System.arraycopy(data, 0, bytes, 0, bytes.length);
 
@@ -85,8 +86,16 @@ public class ToFS implements StorageFile{
             length.value = bytes.length;
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (raf != null) {
+                    raf.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return true;
         }
-        return true;
     }
 
     @Override
