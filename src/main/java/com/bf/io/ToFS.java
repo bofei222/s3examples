@@ -1,6 +1,8 @@
 package com.bf.io;
 
 
+import org.omg.CORBA.IntHolder;
+
 import java.io.*;
 
 /**
@@ -8,49 +10,79 @@ import java.io.*;
  * @Date 2019/1/8 12:46
  * @Description
  */
-public class ToFS implements StorageFile {
+public class ToFS implements StorageFile{
 
-
-    private StorageFile storageFile;
+    private StorageConfig storageConfig;
     private File file;
 
 
-    public ToFS(StorageFile storageFile) {
-        this.storageFile = storageFile;
+    public ToFS(StorageConfig storageConfig) {
+        this.storageConfig = storageConfig;
     }
 
     @Override
     public boolean open(String id, String flag) {
-        String firstpath = "path";
-        String hash = Util.hash(id);
-        file = new File(firstpath + File.separator + hash + File.separator + id);
-        return true;
+        if ("w".equals(flag)) {
+            String hash = MyUtil.hash(id);
+            File dir = new File(storageConfig.getDirPath() + File.separator + hash);
+            dir.mkdirs();
+            file = new File(dir + File.separator + id);
+            if (!file.exists()) {
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return true;
+        } else {
+            file = new File(storageConfig.getFilePath());
+            return true;
+        }
     }
 
     @Override
-    public boolean read(byte[] data, int off, int size, Integer length) {
-
-        try (FileInputStream fio = new FileInputStream(file)) {
-            data = new byte[1024000000];
-            int k = 0;
-            while ((k = fio.read(data)) != -1) {
-                System.out.println(new String(data));
-                length = k;
+    public boolean read(byte[] data, long off, long size, IntHolder length) {
+        RandomAccessFile raf = null;
+        try {
+            raf = new RandomAccessFile(file, "rw");
+            raf.seek(off);
+            int length1 = (int)file.length();
+            byte[] bytes = null;
+            if (size > (length1 - off)) {
+                bytes = new byte[(int)(length1 - off)];
+            } else {
+                bytes = new byte[(int)size];
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            raf.read(bytes);
+//            System.out.println(new String(bytes));
+            length.value = bytes.length;
+
+            System.arraycopy(bytes, 0, data, 0, bytes.length);
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            try {
+                if (raf != null) {
+                    raf.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return true;
         }
-        return true;
     }
 
     @Override
-    public boolean write(byte[] data, int off, int size, Integer length) {
-        try (FileOutputStream fos = new FileOutputStream(file, true)) {
-            fos.write(data);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+    public boolean write(byte[] data, long off, long size, IntHolder length) {
+        try {
+            RandomAccessFile raf = new RandomAccessFile(file, "rw");
+            byte[] bytes = new byte[(int)size];
+            System.arraycopy(data, 0, bytes, 0, bytes.length);
+
+            raf.seek(off);
+            raf.write(bytes);
+            length.value = bytes.length;
         } catch (IOException e) {
             e.printStackTrace();
         }

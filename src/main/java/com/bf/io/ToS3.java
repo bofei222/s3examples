@@ -1,5 +1,7 @@
 package com.bf.io;
 
+import org.omg.CORBA.IntHolder;
+
 /**
  * @Author bofei
  * @Date 2019/1/8 12:49
@@ -18,12 +20,12 @@ public class ToS3 implements StorageFile {
     }
 
     @Override
-    public boolean read(byte[] data, int off, int size, Integer length) {
+    public boolean read(byte[] data, long off, long size, IntHolder length) {
         return false;
     }
 
     @Override
-    public boolean write(byte[] data, int off, int size, Integer length) {
+    public boolean write(byte[] data, long off, long size, IntHolder length) {
         return false;
     }
 

@@ -67,7 +67,7 @@ public class PutObject
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentLength(words.length);
 
-            s3.putObject("com.bf", "456.txt", new ByteArrayInputStream(words), metadata);
+            s3.putObject("com.bf", "文本/789.txt", new ByteArrayInputStream(words), metadata);
 
         } catch (AmazonServiceException e) {
             System.err.println(e.getErrorMessage());

@@ -41,7 +41,7 @@ public class GetObject {
 
             // Get a range of bytes from an object and print the bytes.
             GetObjectRequest rangeObjectRequest = new GetObjectRequest(bucketName, key)
-                    .withRange(3,3);
+                    .withRange(3,100);
             objectPortion = s3Client.getObject(rangeObjectRequest);
             System.out.println("Printing bytes retrieved.");
             displayTextInputStream(objectPortion.getObjectContent());

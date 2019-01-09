@@ -15,7 +15,7 @@ import java.util.List;
  * @Date 2019/1/8 18:37
  * @Description
  */
-public class S3Test {
+public class S3Upload {
     public static void main(String[] args) {
         String bucket = "com.bf2";
         String s3Key = "2个5M.txt";

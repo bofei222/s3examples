@@ -9,18 +9,15 @@ import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ResponseHeaderOverrides;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.util.IOUtils;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class S3Util {
-    public static void main(String[] args) {
-        List<Integer> ss = new ArrayList<>();
-        List<Byte> datas = new ArrayList<>();
-    }
 
-    public static void getObject(int off,int size) {
+    public static void getObject(byte[] datas, int off, int size, Integer length) {
         String clientRegion = "ap-northeast-1";
         String bucketName = "com.bf";
         String key = "456.txt";
@@ -46,8 +43,8 @@ public class S3Util {
             System.out.println("Content-Type: " + object.getObjectMetadata().getContentType());
             System.out.println("Content: ");
             S3ObjectInputStream objectContent = object.getObjectContent();
-
-            displayTextInputStream(object.getObjectContent());
+            datas = IOUtils.toByteArray(objectContent);
+            length = datas.length;
         } catch (AmazonServiceException e) {
             // The call was transmitted successfully, but Amazon S3 couldn't process
             // it, so it returned an error response.
@@ -68,10 +65,5 @@ public class S3Util {
                 e.printStackTrace();
             }
         }
-    }
-
-    private static void displayTextInputStream(InputStream input) throws IOException {
-        // Read the text input stream one line at a time and display each line.
-
     }
 }
