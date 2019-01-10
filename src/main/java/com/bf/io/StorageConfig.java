@@ -13,7 +13,7 @@ public class StorageConfig {
 
     private String clientRegion;
     private String bucketName;
-    private String objectKey;
+
 
     public StorageConfig(String propertiesName) {
         this.propertiesName = propertiesName;
@@ -43,14 +43,6 @@ public class StorageConfig {
         this.bucketName = bucketName;
     }
 
-    public String getObjectKey() {
-        return objectKey;
-    }
-
-    public void setObjectKey(String objectKey) {
-        this.objectKey = objectKey;
-    }
-
     @Override
     public String toString() {
         return "StorageConfig{" +
@@ -58,7 +50,6 @@ public class StorageConfig {
                 ", dirPath='" + dirPath + '\'' +
                 ", clientRegion='" + clientRegion + '\'' +
                 ", bucketName='" + bucketName + '\'' +
-                ", objectKey='" + objectKey + '\'' +
                 '}';
     }
 
@@ -68,7 +59,6 @@ public class StorageConfig {
 
         if (rb.containsKey("clientRegion")) clientRegion = rb.getString("clientRegion");
         if (rb.containsKey("bucketName")) bucketName = rb.getString("bucketName");
-        if (rb.containsKey("objectKey")) objectKey = rb.getString("objectKey");
         return true;
     }
 

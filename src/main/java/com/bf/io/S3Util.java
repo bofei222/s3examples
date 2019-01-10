@@ -3,20 +3,62 @@ package com.bf.io;
 import aws.example.s3.GetObject;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.ResponseHeaderOverrides;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class S3Util {
+    private Integer count = 1;
+    public static void main(String[] args) {
+        String bucket = "com.bf2";
+        String s3Key = "2个5M.txt";
 
+
+        AmazonS3 s3Client = AmazonS3ClientBuilder.standard().withRegion(Regions.CN_NORTHWEST_1).build();
+
+        // 创建一个列表保存所有分传的 PartETag, 在分段完成后会用到
+        List<PartETag> partETags = new ArrayList<>();
+
+        // 第一步，初始化，声明下面将有一个 Multipart Upload
+        InitiateMultipartUploadRequest initRequest = new InitiateMultipartUploadRequest(bucket, s3Key);
+        InitiateMultipartUploadResult initResponse = s3Client.initiateMultipartUpload(initRequest);
+
+        int minPartSize = 5 * 1024 * 1024; //分段大小在 5MB - 5GB 之间，只有最后一个分段才允许小于 5MB，不可避免的
+
+        try {
+            for (int i = 1; i < 3; i++) {
+                System.out.println("第" + i + "段");
+                byte[] bytes = RandomStringUtils.randomAlphabetic(minPartSize).getBytes(); //填充一个 5MB 的字符串
+
+                UploadPartRequest uploadRequest = new UploadPartRequest()
+                        .withBucketName(bucket)
+                        .withKey(s3Key)
+                        .withUploadId(initResponse.getUploadId())
+                        .withPartNumber(i)
+                        .withInputStream(new ByteArrayInputStream(bytes))
+                        .withPartSize(bytes.length);
+
+                // 第二步，上传分段，并把当前段的 PartETag 放到列表中
+                partETags.add(s3Client.uploadPart(uploadRequest).getPartETag());
+            }
+
+            // 第三步，完成上传
+            CompleteMultipartUploadRequest compRequest = new CompleteMultipartUploadRequest(bucket, s3Key,
+                    initResponse.getUploadId(), partETags);
+
+            s3Client.completeMultipartUpload(compRequest);
+        } catch (Exception e) {
+            s3Client.abortMultipartUpload(new AbortMultipartUploadRequest(bucket, s3Key, initResponse.getUploadId()));
+            System.out.println("Failed to upload, " + e.getMessage());
+        }
+    }
     public static void getObject(byte[] datas, int off, int size, Integer length) {
         String clientRegion = "ap-northeast-1";
         String bucketName = "com.bf";

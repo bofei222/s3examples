@@ -14,7 +14,7 @@ public class ToFS implements StorageFile{
 
     private StorageConfig storageConfig;
     private File file;
-
+    RandomAccessFile raf = null;
 
     public ToFS(StorageConfig storageConfig) {
         this.storageConfig = storageConfig;
@@ -46,7 +46,6 @@ public class ToFS implements StorageFile{
             return false;
         }
         boolean flag = true;
-        RandomAccessFile raf = null;
         try {
             raf = new RandomAccessFile(file, "rw");
             raf.seek(off);
@@ -74,7 +73,6 @@ public class ToFS implements StorageFile{
             return false;
         }
         boolean flag = true;
-        RandomAccessFile raf = null;
         try {
             raf = new RandomAccessFile(file, "rw");
             raf.seek(off);

@@ -1,6 +1,7 @@
 package com.bf.io;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -25,6 +26,21 @@ public class Test2 {
         fos.write(words, 0, 5);//利用write方法将数据写入到文件中去
         System.out.println("文件已更新!");
     }
+
+    public static void main(String[] args) {
+        String[] first = {"a", "b", "c"};
+        String[] second = {"1", "2", "3"};
+        String[] both = (String[])ArrayUtils.addAll(first, second);
+        System.out.println(Arrays.toString(both));
+
+        byte[] b = new byte[500 * 1024 * 1024];
+        byte[] b2 = RandomStringUtils.randomAlphabetic(4 * 1024 * 1024).getBytes();
+        byte[] bytes = ArrayUtils.addAll(b, b2);
+
+        System.out.println(new String(bytes));
+        System.out.println(bytes.length);
+
+    }
     // Byte[] byte[] List<Byte>
     public static void main3(String[] args) throws IOException {
         String str = "789";
@@ -45,7 +61,7 @@ public class Test2 {
         System.out.println(list.size());
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main6(String[] args) throws FileNotFoundException {
 
         File file = new File("c:/test2/bofei/1.txt");
 //        file.mkdirs();
