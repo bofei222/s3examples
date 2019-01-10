@@ -26,20 +26,49 @@ public class Test2 {
         fos.write(words, 0, 5);//利用write方法将数据写入到文件中去
         System.out.println("文件已更新!");
     }
-
+    // arr、list的addAll()
     public static void main(String[] args) {
         String[] first = {"a", "b", "c"};
         String[] second = {"1", "2", "3"};
         String[] both = (String[])ArrayUtils.addAll(first, second);
         System.out.println(Arrays.toString(both));
 
-        byte[] b = new byte[500 * 1024 * 1024];
-        byte[] b2 = RandomStringUtils.randomAlphabetic(4 * 1024 * 1024).getBytes();
-        byte[] bytes = ArrayUtils.addAll(b, b2);
+        byte[] b = new byte[5];
+//        byte[] b2 = RandomStringUtils.randomAlphabetic(4 * 1024 * 1024).getBytes();
+//        byte[] bytes = ArrayUtils.addAll(b, b2);
 
-        System.out.println(new String(bytes));
-        System.out.println(bytes.length);
+//        System.out.println(new String(bytes));
+//        System.out.println(bytes.length);
 
+        byte b3 = 127;
+
+        System.out.println(Arrays.toString(b));
+        Byte[] byteObject = ArrayUtils.toObject(b);
+        List<Byte> list = new ArrayList<Byte>(Arrays.asList(byteObject));
+        System.out.println(list.size());
+        List l = new ArrayList();
+        l.add("1");
+        List l2 = new ArrayList();
+        l2.add("2");
+        System.out.println(l.size());
+        l2.addAll(l);
+        Object[] objects = l2.toArray();
+        System.out.println(l2.toString());
+        System.out.println("-------------------------------------");
+        List<Byte> al = new ArrayList<Byte>();
+        al.add((byte)1);
+        al.add((byte)20);
+        al.add((byte)30);
+        al.add((byte)40);
+
+//        Integer[] arr = new Integer[al.size() - 1];
+//        System.out.println(arr.length);
+        Byte[] bytes = new Byte[al.size()];
+         bytes = al.toArray(bytes);
+//        System.out.println(Arrays.toString(integers));
+//        System.out.println(Arrays.toString(arr));
+//        System.out.println(arr.length);
+        byte[] b4 = ArrayUtils.toPrimitive(bytes);
     }
     // Byte[] byte[] List<Byte>
     public static void main3(String[] args) throws IOException {

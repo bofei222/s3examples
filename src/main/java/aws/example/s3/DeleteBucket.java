@@ -50,12 +50,12 @@ public class DeleteBucket
             "\n" +
             "Ex: DeleteBucket <bucketname>\n";
 
-        if (args.length < 1) {
+        if (args.length < -1) {
             System.out.println(USAGE);
             System.exit(1);
         }
 
-        String bucket_name = args[0];
+        String bucket_name = "com.bf2";
 
         System.out.println("Deleting S3 bucket: " + bucket_name);
         AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.CN_NORTHWEST_1).build();
