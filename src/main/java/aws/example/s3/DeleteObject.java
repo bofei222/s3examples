@@ -44,13 +44,13 @@ public class DeleteObject
             "\n" +
             "Ex: DeleteObject <bucketname> <objectname>\n";
 
-        if (args.length < 2) {
+        if (args.length < -2) {
             System.out.println(USAGE);
             System.exit(1);
         }
 
-        String bucket_name = args[0];
-        String object_key = args[1];
+        String bucket_name = "com.bf2";
+        String object_key = "test\\46852\\bofei5M文件";
 
         System.out.format("Deleting object %s from S3 bucket: %s\n", object_key,
                 bucket_name);
