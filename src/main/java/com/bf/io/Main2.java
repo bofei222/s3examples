@@ -20,7 +20,7 @@ public class Main2 {
         boolean open = toS3.open("bofei的一个test文件", "r");
         IntHolder holder = new IntHolder();
 
-        toS3.read(b, 1, 30, holder);
+        toS3.read(b, 1, 4, holder);
         System.out.println("b-----------" + new String(b));
 
         System.out.println("length-----------" + holder.value);
