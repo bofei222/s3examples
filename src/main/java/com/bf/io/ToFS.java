@@ -42,11 +42,11 @@ public class ToFS implements StorageFile{
 
     @Override
     public boolean read(byte[] data, long off, long size, IntHolder length) {
-        if (size > data.length) {
-            return false;
-        }
         boolean flag = true;
-
+        if (size > data.length) {
+            flag = false;
+            return flag;
+        }
         try {
             raf = new RandomAccessFile(file, "rw");
             // 文件长度，字节数
