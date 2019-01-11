@@ -128,71 +128,61 @@ public class ToS3 implements StorageFile {
     // 2。上传就刷新buff，重置pos
     @Override
     public boolean write(byte[] data, long off, long size, IntHolder length) {
-        try {
-            if (data.length < minPartSize) { // data小于500M,缓存
-                //            System.out.println("1");
-                // 缓存到buff中
+        if (data.length < minPartSize) { // data小于500M,缓存
+            //            System.out.println("1");
+            // 缓存到buff中
+            System.arraycopy(data, 0, buff, pos, data.length);
+            pos += data.length;
+            if (pos > minPartSize) { // 已缓存的数据 大于500M，就上传到S3
+                //                System.out.println("3");
+                byte[] b = new byte[pos];
+                // 把缓存中的数据 从0到pos复制到新数组
+                System.arraycopy(buff, 0, b, 0, pos);
+                // 刷新buff pos
+                buff = new byte[buffSize];
+                pos = 0;
+                upload(b);
+                return true;
+            } else { // 已缓存的数据 还没到500M就先存着不动
+                //                System.out.println("2");
+            }
+        } else { // 大于500M就上传s3，
+            if (pos != 0) { // 如果pos不等于0，说明buff中有不到500M的缓存数据，就把这次的和之前的一起传到s3
+                //                System.out.println("4");
                 System.arraycopy(data, 0, buff, pos, data.length);
                 pos += data.length;
-                if (pos > minPartSize) { // 已缓存的数据 大于500M，就上传到S3
-                    //                System.out.println("3");
-                    byte[] b = new byte[pos];
-                    // 把缓存中的数据 从0到pos复制到新数组
-                    System.arraycopy(buff, 0, b, 0, pos);
-                    // 刷新buff pos
-                    buff = new byte[buffSize];
-                    pos = 0;
-                    upload(b);
-                    return true;
-                } else { // 已缓存的数据 还没到500M就先存着不动
-                    //                System.out.println("2");
-                }
-            } else { // 大于500M就上传s3，
-                if (pos != 0) { // 如果pos不等于0，说明buff中有不到500M的缓存数据，就把这次的和之前的一起传到s3
-                    //                System.out.println("4");
-                    System.arraycopy(data, 0, buff, pos, data.length);
-                    pos += data.length;
-                    byte[] b = new byte[pos];
-                    System.arraycopy(buff, 0, b, 0, pos);
-                    buff = new byte[buffSize];
-                    pos = 0;
-                    upload(b);
-                } else { // 如果buff中没有数据，就直接把这次的传到s3
-                    //                System.out.println("5");
-                    upload(data);
-                }
+                byte[] b = new byte[pos];
+                System.arraycopy(buff, 0, b, 0, pos);
+                buff = new byte[buffSize];
+                pos = 0;
+                upload(b);
+            } else { // 如果buff中没有数据，就直接把这次的传到s3
+                //                System.out.println("5");
+                upload(data);
             }
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
         }
+        return true;
     }
 
     @Override
     public boolean close() {
-        try {
-            if ("w".equals(rw)) {
-                System.out.println("clo se");
-                if (pos != 0) { // buff有数据就close，说明是一个文件，在close时上传，然后在合并；不然直接合并
-                    System.out.println("6");
-                    byte[] b = new byte[pos];
-                    System.arraycopy(buff, 0, b, 0, pos);
-                    buff = new byte[buffSize];
-                    pos = 0;
-                    upload(b);
-                }
-                System.out.println("7");
-                // 第三步，完成上传，合并
-                CompleteMultipartUploadRequest compRequest = new CompleteMultipartUploadRequest(storageConfig.getBucketName(), s3Key,
-                        initResponse.getUploadId(), partETags);
-                s3Client.completeMultipartUpload(compRequest);
+        if ("w".equals(rw)) {
+            System.out.println("clo se");
+            if (pos != 0) { // buff有数据就close，说明是一个文件，在close时上传，然后在合并；不然直接合并
+                System.out.println("6");
+                byte[] b = new byte[pos];
+                System.arraycopy(buff, 0, b, 0, pos);
+                buff = new byte[buffSize];
+                pos = 0;
+                upload(b);
             }
-            return true;
-        } catch (SdkClientException e) {
-            e.printStackTrace();
-            return false;
+            System.out.println("7");
+            // 第三步，完成上传，合并
+            CompleteMultipartUploadRequest compRequest = new CompleteMultipartUploadRequest(storageConfig.getBucketName(), s3Key,
+                    initResponse.getUploadId(), partETags);
+            s3Client.completeMultipartUpload(compRequest);
         }
+        return true;
     }
 
     // 实际上传动作

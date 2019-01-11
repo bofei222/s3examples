@@ -27,7 +27,23 @@ public class Test2 {
         System.out.println("文件已更新!");
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
+        boolean test = test();
+        System.out.println(test);
+        System.out.println("2112");
+    }
+    public static boolean test() {
+//        try {
+            List list = null;
+            list.size();
+            System.out.println("aaa");
+            return true;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+    }
+    public static void main8(String[] args) throws IOException {
 //        FileInputStream fis = new FileInputStream("C:\\test\\0776\\zxcvbnm");
 //        byte[] b = null;
 ////        System.out.println(b.length);
