@@ -1,16 +1,19 @@
 package com.bf.io;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
+import com.amazonaws.util.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.omg.CORBA.IntHolder;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -67,6 +70,49 @@ public class ToS3 implements StorageFile {
     @Override
     public boolean read(byte[] data, long off, long size, IntHolder length) {
 
+        S3Object object = null;
+        try {
+            AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+                    .withRegion(Regions.CN_NORTHWEST_1)
+//                    .withCredentials(new ProfileCredentialsProvider())
+                    .build();
+
+            GetObjectRequest request = null;
+            if (off == -1) {
+                request = new GetObjectRequest(storageConfig.getBucketName(), s3Key);
+            } else {
+                int end = (int)(off + size);
+                request = new GetObjectRequest(storageConfig.getBucketName(), s3Key)
+                        .withRange(3, end);
+            }
+            // Get an object and print its contents.
+            System.out.println("Downloading an object");
+            object = s3Client.getObject(request);
+            System.out.println("Content-Type: " + object.getObjectMetadata().getContentType());
+            System.out.println("Content: ");
+            S3ObjectInputStream objectContent = object.getObjectContent();
+            data = IOUtils.toByteArray(objectContent);
+            length.value = data.length;
+        } catch (AmazonServiceException e) {
+            // The call was transmitted successfully, but Amazon S3 couldn't process
+            // it, so it returned an error response.
+            e.printStackTrace();
+        } catch (SdkClientException e) {
+            // Amazon S3 couldn't be contacted for a response, or the client
+            // couldn't parse the response from Amazon S3.
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            // To ensure that the network connection doesn't remain open, close any open input streams.
+            try {
+                if (object != null) {
+                    object.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         return false;
     }
 

@@ -9,6 +9,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.omg.CORBA.IntHolder;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import java.util.List;
 
 public class S3Util {
     private Integer count = 1;
-    public static void main(String[] args) {
+    public static void main2(String[] args) {
         String bucket = "com.bf2";
         String s3Key = "2个5M.txt";
 
@@ -59,15 +60,26 @@ public class S3Util {
             System.out.println("Failed to upload, " + e.getMessage());
         }
     }
+
+    public static void main(String[] args) {
+        byte[] b = new byte[1024];
+        IntHolder intHolder = new IntHolder();
+        getObject(b, 1, 3, intHolder.value);
+
+
+
+    }
+
+
     public static void getObject(byte[] datas, int off, int size, Integer length) {
         String clientRegion = "ap-northeast-1";
-        String bucketName = "com.bf";
-        String key = "456.txt";
+        String bucketName = "com.bf2";
+        String key = "test\\117488\\bofei的一个test文件";
 
         S3Object object = null;
         try {
             AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-                    .withRegion(clientRegion)
+                    .withRegion(Regions.CN_NORTHWEST_1)
 //                    .withCredentials(new ProfileCredentialsProvider())
                     .build();
 
