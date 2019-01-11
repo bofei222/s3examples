@@ -9,6 +9,7 @@ import org.omg.CORBA.IntHolder;
  * @date 2019/1/9 10:35
  */
 public class Main {
+
     // read
     // 读指定偏移量off、期望长度的数据size的，实际长度length的数据
     public static void main2(String[] args) {
@@ -24,28 +25,37 @@ public class Main {
         System.out.println(length.value);
         System.out.println(read);
         System.out.println(new String(b));
+        System.out.println(b.length);
     }
 
     // write
     public static void main(String[] args) {
-        String s = "123";
+        String s = "abcdef";
+        String s2 = "123456";
+        String s3 = "987";
         int minPartSize = 5 * 1024 * 1024;
-        byte[] bytes2 = s.getBytes();
-        byte[] bytes = RandomStringUtils.randomAlphabetic(minPartSize).getBytes(); //填充一个 5MB 的字符串
+        byte[] b = s.getBytes();
+        byte[] b2 = s2.getBytes();
+        byte[] b3 = s3.getBytes();
+        byte[] bytes2 = RandomStringUtils.randomAlphabetic(minPartSize).getBytes(); //填充一个 5MB 的字符串
 
-        StorageConfig storageConfig = new StorageConfig("fs");
+        StorageConfig storageConfig = new StorageConfig("C:\\test\\fs.properties");
         storageConfig.init();
+        System.out.println(storageConfig);
         ToFS toFS = new ToFS(storageConfig);
         boolean open = toFS.open("zxcvbnm", "w");
         IntHolder length = new IntHolder();
 
+        toFS.write(b, 3, b.length, length);
+//        System.out.println(length.value);
+        toFS.write(b2, 3, b2.length, length);
+        toFS.write(b3, 3, b3.length, length);
 
-        boolean write = toFS.write(bytes, 3, bytes.length, length);
-        Thread thread = new Thread(new MyWork(toFS, 0));
-        Thread thread1 = new Thread(new MyWork(toFS, 5242883));
-        thread.start();
-        thread1.start();
-        System.out.println(write);
+//        Thread thread = new Thread(new MyWork(toFS, 0));
+//        Thread thread1 = new Thread(new MyWork(toFS, 5242883));
+//        thread.start();
+//        thread1.start();
+//        System.out.println(write);
         System.out.println(length.value);
 
     }

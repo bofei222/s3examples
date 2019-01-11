@@ -24,19 +24,24 @@ import java.util.List;
  * @Description
  */
 public class ToS3 implements StorageFile {
+    // 读和写全局配置
     private StorageConfig storageConfig;
 
+    // 读或者写标识
+    private String rw = null;
+    // 对象key
     String s3Key = null;
-    private Integer i = 1;
-
+    // s3Client
     AmazonS3 s3Client = null;
 
+    //以下是写所需要的全局变量
+    // 分段上传 段数标识
+    private Integer i = 1;
     // 创建一个列表保存所有分传的 PartETag, 在分段完成后会用到
     List<PartETag> partETags = new ArrayList<>();
     // 第一步，初始化，声明下面将有一个 Multipart Upload
     InitiateMultipartUploadRequest initRequest = null;
     InitiateMultipartUploadResult initResponse = null;
-
 
     //    private List<Byte> buff = new ArrayList<>();
     private int minPartSize = 8 * 1024 * 1024;
@@ -44,10 +49,12 @@ public class ToS3 implements StorageFile {
     private byte[] buff = new byte[buffSize];
     private Integer pos = 0;
 
+
+    // 以下是读所需要的全局变量
+
     public ToS3(StorageConfig storageConfig) {
         this.storageConfig = storageConfig;
     }
-
 
     @Override
     public boolean open(String id, String flag) {
@@ -69,14 +76,8 @@ public class ToS3 implements StorageFile {
 
     @Override
     public boolean read(byte[] data, long off, long size, IntHolder length) {
-
         S3Object object = null;
         try {
-            AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-                    .withRegion(Regions.CN_NORTHWEST_1)
-//                    .withCredentials(new ProfileCredentialsProvider())
-                    .build();
-
             GetObjectRequest request = null;
             if (off == -1) {
                 request = new GetObjectRequest(storageConfig.getBucketName(), s3Key);
@@ -89,8 +90,9 @@ public class ToS3 implements StorageFile {
             System.out.println("Downloading an object");
             object = s3Client.getObject(request);
             System.out.println("Content-Type: " + object.getObjectMetadata().getContentType());
-            System.out.println("Content: ");
             S3ObjectInputStream objectContent = object.getObjectContent();
+            System.out.println("Content: ");
+            S3Util.displayTextInputStream(objectContent);
             data = IOUtils.toByteArray(objectContent);
             length.value = data.length;
         } catch (AmazonServiceException e) {
@@ -159,25 +161,25 @@ public class ToS3 implements StorageFile {
 
     @Override
     public boolean close() {
-        System.out.println("close");
-        if (pos != 0) { // buff有数据就close，说明是一个文件，在close时上传，然后在合并；不然直接合并
-            System.out.println("6");
-            byte[] b = new byte[pos];
-            System.arraycopy(buff, 0, b, 0, pos);
-            buff = new byte[buffSize];
-            pos = 0;
-            upload(b);
+        if ("w".equals(rw)) {
+            System.out.println("clo se");
+            if (pos != 0) { // buff有数据就close，说明是一个文件，在close时上传，然后在合并；不然直接合并
+                System.out.println("6");
+                byte[] b = new byte[pos];
+                System.arraycopy(buff, 0, b, 0, pos);
+                buff = new byte[buffSize];
+                pos = 0;
+                upload(b);
+            }
+            System.out.println("7");
+            // 第三步，完成上传，合并
+            CompleteMultipartUploadRequest compRequest = new CompleteMultipartUploadRequest(storageConfig.getBucketName(), s3Key,
+                    initResponse.getUploadId(), partETags);
+            s3Client.completeMultipartUpload(compRequest);
         }
-        System.out.println("7");
-        // 第三步，完成上传，合并
-        CompleteMultipartUploadRequest compRequest = new CompleteMultipartUploadRequest(storageConfig.getBucketName(), s3Key,
-                initResponse.getUploadId(), partETags);
-        s3Client.completeMultipartUpload(compRequest);
         return true;
     }
-
-
-
+    // 实际上传动作
     public void upload(byte[] data) {
         System.out.println("write" + i);
         UploadPartRequest uploadRequest = new UploadPartRequest()

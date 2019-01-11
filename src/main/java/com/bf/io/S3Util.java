@@ -72,7 +72,7 @@ public class S3Util {
 
 
     public static void getObject(byte[] datas, int off, int size, Integer length) {
-        String clientRegion = "ap-northeast-1";
+//        String clientRegion = "ap-northeast-1";
         String bucketName = "com.bf2";
         String key = "test\\117488\\bofei的一个test文件";
 
@@ -89,7 +89,7 @@ public class S3Util {
             } else {
                 int end = off + size;
                 request = new GetObjectRequest(bucketName, key)
-                        .withRange(3, end);
+                        .withRange(off, end);
             }
             // Get an object and print its contents.
             System.out.println("Downloading an object");
@@ -97,6 +97,7 @@ public class S3Util {
             System.out.println("Content-Type: " + object.getObjectMetadata().getContentType());
             System.out.println("Content: ");
             S3ObjectInputStream objectContent = object.getObjectContent();
+            displayTextInputStream(objectContent);
             datas = IOUtils.toByteArray(objectContent);
             length = datas.length;
         } catch (AmazonServiceException e) {
@@ -119,5 +120,15 @@ public class S3Util {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static void displayTextInputStream(InputStream input) throws IOException {
+        // Read the text input stream one line at a time and display each line.
+        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+            System.out.println(line);
+        }
+        System.out.println();
     }
 }

@@ -1,5 +1,10 @@
 package com.bf.io;
 
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.builder.fluent.Configurations;
+import org.apache.commons.configuration2.ex.ConfigurationException;
+
+import java.io.File;
 import java.util.ResourceBundle;
 
 /**
@@ -54,12 +59,19 @@ public class StorageConfig {
     }
 
     public Boolean init() {
-        ResourceBundle rb = ResourceBundle.getBundle(propertiesName.trim());
-        if (rb.containsKey("dirPath")) dirPath = rb.getString("dirPath");
+        try {
+            Configurations configs = new Configurations();
+            Configuration config = configs.properties(new File(propertiesName));
 
-        if (rb.containsKey("clientRegion")) clientRegion = rb.getString("clientRegion");
-        if (rb.containsKey("bucketName")) bucketName = rb.getString("bucketName");
-        return true;
+            if (config.containsKey("dirPath")) dirPath = config.getString("dirPath");
+
+            if (config.containsKey("clientRegion")) clientRegion = config.getString("clientRegion");
+            if (config.containsKey("bucketName")) bucketName = config.getString("bucketName");
+            return true;
+        } catch (ConfigurationException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 

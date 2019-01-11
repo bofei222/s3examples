@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
@@ -21,14 +22,14 @@ import com.amazonaws.services.s3.model.S3Object;
 public class GetObject {
 
     public static void main(String[] args) throws IOException {
-        String clientRegion = "ap-northeast-1";
-        String bucketName = "com.bf";
-        String key = "456.txt";
+//        String clientRegion = "ap-northeast-1";
+        String bucketName = "com.bf2";
+        String key = "test\\117488\\bofei的一个test文件";
 
         S3Object fullObject = null, objectPortion = null, headerOverrideObject = null;
         try {
             AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-                    .withRegion(clientRegion)
+                    .withRegion(Regions.CN_NORTHWEST_1)
 //                    .withCredentials(new ProfileCredentialsProvider())
                     .build();
 
@@ -41,7 +42,7 @@ public class GetObject {
 
             // Get a range of bytes from an object and print the bytes.
             GetObjectRequest rangeObjectRequest = new GetObjectRequest(bucketName, key)
-                    .withRange(3,100);
+                    .withRange(3,7);
             objectPortion = s3Client.getObject(rangeObjectRequest);
             System.out.println("Printing bytes retrieved.");
             displayTextInputStream(objectPortion.getObjectContent());

@@ -46,8 +46,11 @@ public class ToFS implements StorageFile{
             return false;
         }
         boolean flag = true;
+
         try {
             raf = new RandomAccessFile(file, "rw");
+            // 文件长度，字节数
+            long fileLength = file.length();
             raf.seek(off);
 
             int read = raf.read(data, 0, (int) size);
@@ -73,8 +76,12 @@ public class ToFS implements StorageFile{
             return false;
         }
         boolean flag = true;
+        RandomAccessFile raf = null;
         try {
             raf = new RandomAccessFile(file, "rw");
+            // 文件长度，字节数
+            // 无视off参数，直接在文件末尾追加
+            off = file.length();
             raf.seek(off);
             raf.write(data, 0, (int)size);
             length.value = (int)size;

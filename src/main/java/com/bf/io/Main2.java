@@ -8,7 +8,25 @@ import org.omg.CORBA.IntHolder;
  * @date 2019/1/10 13:01
  */
 public class Main2 {
+
     public static void main(String[] args) {
+        byte[] b = new byte[1024];
+//        byte[] b = null;
+        StorageConfig sc = new StorageConfig("s3");
+        sc.init();
+        StorageFile toS3 = new ToS3(sc);
+
+        boolean open = toS3.open("bofei的一个test文件", "r");
+        IntHolder holder = new IntHolder();
+
+        toS3.read(b, 0, 3, holder);
+        System.out.println(new String(b));
+        System.out.println(holder.value);
+        System.out.println(b.length);
+
+
+    }
+    public static void main2(String[] args) {
         int p1 = 5 * 1024 * 1024; //分段大小在 5MB - 5GB 之间，只有最后一个分段才允许小于 5MB，不可避免的
         int p2 = 3 * 1024 * 1024; //分段大小在 5MB - 5GB 之间，只有最后一个分段才允许小于 5MB，不可避免的
         int p3 = 3 * 1024 * 1024; //分段大小在 5MB - 5GB 之间，只有最后一个分段才允许小于 5MB，不可避免的

@@ -26,8 +26,33 @@ public class Test2 {
         fos.write(words, 0, 5);//利用write方法将数据写入到文件中去
         System.out.println("文件已更新!");
     }
+
+    public static void main(String[] args) throws IOException {
+//        FileInputStream fis = new FileInputStream("C:\\test\\0776\\zxcvbnm");
+//        byte[] b = null;
+////        System.out.println(b.length);
+//        int size = 10;
+//        byte[] b2 = new byte[size];
+//        int read = fis.read(b2, 0, size);
+//        b = b2;
+//        System.out.println(new String(b));
+//        System.out.println(b.length);
+
+
+        byte[] data = null;
+        change(data);
+//        System.out.println(Arrays.toString(data));
+
+        File file = new File("c:123");
+        System.out.println(file.length());
+    }
+    public static void change(final byte[] b) {
+        // 改变b
+//        b = "abc".getBytes();
+    }
+
     // arr、list的addAll()
-    public static void main(String[] args) {
+    public static void main7(String[] args) {
         String[] first = {"a", "b", "c"};
         String[] second = {"1", "2", "3"};
         String[] both = (String[])ArrayUtils.addAll(first, second);
