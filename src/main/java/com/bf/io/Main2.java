@@ -10,7 +10,7 @@ import org.omg.CORBA.IntHolder;
 public class Main2 {
 
     // 读
-    public static void main(String[] args) {
+    public static void main2(String[] args) {
         byte[] b = new byte[100];
 //        byte[] b = null;
         StorageConfig sc = new StorageConfig("s3.properties");
@@ -29,7 +29,7 @@ public class Main2 {
 
     }
     // 写
-    public static void main2(String[] args) {
+    public static void main(String[] args) {
         int p1 = 5 * 1024 * 1024; //分段大小在 5MB - 5GB 之间，只有最后一个分段才允许小于 5MB，不可避免的
         int p2 = 3 * 1024 * 1024; //分段大小在 5MB - 5GB 之间，只有最后一个分段才允许小于 5MB，不可避免的
         int p3 = 3 * 1024 * 1024; //分段大小在 5MB - 5GB 之间，只有最后一个分段才允许小于 5MB，不可避免的
@@ -38,7 +38,7 @@ public class Main2 {
         byte[] b3 = RandomStringUtils.randomAlphabetic(p3).getBytes(); //填充一个 5MB 的字符串
         byte[] b4 = "abcdefg".getBytes();
 
-        StorageConfig sc = new StorageConfig("s3");
+        StorageConfig sc = new StorageConfig("C:\\test\\s3.properties");
         sc.init();
         StorageFile toS3 = new ToS3(sc);
         boolean open = toS3.open("bofei的一个test文件", "w");

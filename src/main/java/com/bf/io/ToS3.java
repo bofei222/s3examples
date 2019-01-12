@@ -55,6 +55,7 @@ public class ToS3 implements StorageFile {
 
     @Override
     public boolean open(String id, String flag) {
+        rw = flag;
         System.out.println("open" + i);
         String hash = MyUtil.hash(id);
         s3Key = storageConfig.getDirPath() + File.separator + hash + File.separator + id;
@@ -133,8 +134,8 @@ public class ToS3 implements StorageFile {
             if (data.length < minPartSize) { // data小于500M,缓存
                 //            System.out.println("1");
                 // 缓存到buff中
-                System.arraycopy(data, 0, buff, pos, data.length);
-                pos += data.length;
+                System.arraycopy(data, 0, buff, pos, (int)size);
+                pos += (int)size;
                 if (pos > minPartSize) { // 已缓存的数据 大于500M，就上传到S3
                     //                System.out.println("3");
                     byte[] b = new byte[pos];
@@ -151,8 +152,8 @@ public class ToS3 implements StorageFile {
             } else { // 大于500M就上传s3，
                 if (pos != 0) { // 如果pos不等于0，说明buff中有不到500M的缓存数据，就把这次的和之前的一起传到s3
                     //                System.out.println("4");
-                    System.arraycopy(data, 0, buff, pos, data.length);
-                    pos += data.length;
+                    System.arraycopy(data, 0, buff, pos, (int)size);
+                    pos += (int)size;
                     byte[] b = new byte[pos];
                     System.arraycopy(buff, 0, b, 0, pos);
                     // 可不可以不定buff的大小，通过返回值的方式，返回多大就是多大，带改进

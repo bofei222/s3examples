@@ -20,10 +20,10 @@ public class MyUtil {
             sum += i;
         }
 
-        System.out.println(sum);
+//        System.out.println(sum);
 
         String b = String.format("%04d", (sum % 1024) + 1);
-        System.out.println(b);
+//        System.out.println(b);
         return b;
     }
 }
