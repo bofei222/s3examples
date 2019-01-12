@@ -9,7 +9,7 @@ import javax.sound.midi.Soundbank;
  */
 public class MyUtil {
     public static void main(String[] args) {
-        String s = "as,4-3<5";
+        String s = "bofei的一个9M+9M文件";
         hash(s);
     }
 
@@ -19,9 +19,11 @@ public class MyUtil {
         for (int i : chars) {
             sum += i;
         }
-//        System.out.println(sum);
-        String b = String.format("%04d", sum);
-//        System.out.println(b);
+
+        System.out.println(sum);
+
+        String b = String.format("%04d", (sum % 1024) + 1);
+        System.out.println(b);
         return b;
     }
 }

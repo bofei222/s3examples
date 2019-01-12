@@ -76,26 +76,33 @@ public class ToFS implements StorageFile{
             return false;
         }
         boolean flag = true;
-        RandomAccessFile raf = null;
         try {
-            raf = new RandomAccessFile(file, "rw");
-            // 文件长度，字节数
-            // 无视off参数，直接在文件末尾追加
-            off = file.length();
-            raf.seek(off);
-            raf.write(data, 0, (int)size);
-            length.value = (int)size;
-        } catch (IOException e) {
+            RandomAccessFile raf = null;
+            try {
+                raf = new RandomAccessFile(file, "rw");
+                // 文件长度，字节数
+                // 无视off参数，直接在文件末尾追加
+    //            off = file.length();
+                raf.seek(off);
+                raf.write(data, 0, (int)size);
+                length.value = (int)size;
+            } catch (IOException e) {
+                e.printStackTrace();
+                flag = false;
+            } finally {
+                try {
+                    if (raf != null) {
+                        raf.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return flag;
+            }
+        } catch (Exception e) {
             e.printStackTrace();
             flag = false;
         } finally {
-            try {
-                if (raf != null) {
-                    raf.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
             return flag;
         }
     }
