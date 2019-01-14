@@ -58,7 +58,7 @@ public class ToS3 implements StorageFile {
         rw = flag;
         System.out.println("open" + i);
         String hash = MyUtil.hash(id);
-        s3Key = storageConfig.getDirPath() + File.separator + hash + File.separator + id;
+        s3Key = storageConfig.getDirPath() + "/" + hash + "/" + id;
 
         s3Client = AmazonS3ClientBuilder.standard().withRegion(Regions.CN_NORTHWEST_1).build();
         if ("w".equals(flag)) {
@@ -85,7 +85,7 @@ public class ToS3 implements StorageFile {
 
             long range = off + size - 1;
             request = new GetObjectRequest(storageConfig.getBucketName(), s3Key)
-                    .withRange(off, 1);
+                    .withRange(off, range);
 //            System.out.println("Downloading an object");
             object = s3Client.getObject(request);
 

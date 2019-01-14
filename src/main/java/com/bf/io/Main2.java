@@ -10,14 +10,14 @@ import org.omg.CORBA.IntHolder;
 public class Main2 {
 
     // 读
-    public static void main2(String[] args) {
+    public static void main(String[] args) {
         byte[] b = new byte[100];
 //        byte[] b = null;
         StorageConfig sc = new StorageConfig("s3.properties");
         sc.init();
         StorageFile toS3 = new ToS3(sc);
 
-        boolean open = toS3.open("bofei的一个test文件", "r");
+        boolean open = toS3.open("bofei的一个3M+3M文件", "r");
         IntHolder holder = new IntHolder();
 
         toS3.read(b, 1, 4, holder);
@@ -29,7 +29,7 @@ public class Main2 {
 
     }
     // 写
-    public static void main(String[] args) {
+    public static void main2(String[] args) {
         int p1 = 5 * 1024 * 1024; //分段大小在 5MB - 5GB 之间，只有最后一个分段才允许小于 5MB，不可避免的
         int p2 = 3 * 1024 * 1024; //分段大小在 5MB - 5GB 之间，只有最后一个分段才允许小于 5MB，不可避免的
         int p3 = 3 * 1024 * 1024; //分段大小在 5MB - 5GB 之间，只有最后一个分段才允许小于 5MB，不可避免的
@@ -41,12 +41,12 @@ public class Main2 {
         StorageConfig sc = new StorageConfig("C:\\test\\s3.properties");
         sc.init();
         StorageFile toS3 = new ToS3(sc);
-        boolean open = toS3.open("bofei的一个test文件", "w");
+        boolean open = toS3.open("bofei的一个3M+3M文件", "w");
         IntHolder holder = new IntHolder();
 //        toS3.write(b1, 0, b1.length, holder);
-//        toS3.write(b2, 0, b2.length, holder);
-//        toS3.write(b3, 0, b3.length, holder);
-        toS3.write(b4, 0, b4.length, holder);
+        toS3.write(b2, 0, b2.length, holder);
+        toS3.write(b3, 0, b3.length, holder);
+//        toS3.write(b4, 0, b4.length, holder);
         toS3.close();
 
     }

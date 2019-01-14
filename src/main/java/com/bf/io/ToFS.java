@@ -23,8 +23,8 @@ public class ToFS implements StorageFile{
     @Override
     public boolean open(String id, String flag) {
         String hash = MyUtil.hash(id);
-        File dir = new File(storageConfig.getDirPath() + File.separator + hash);
-        file = new File(dir + File.separator + id);
+        File dir = new File(storageConfig.getDirPath() + "/" + hash);
+        file = new File(dir + "/" + id);
         if ("w".equals(flag)) {
             dir.mkdirs();
             if (!file.exists()) {
