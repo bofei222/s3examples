@@ -156,7 +156,7 @@ public class ToS3 implements StorageFile {
                     pos += (int)size;
                     byte[] b = new byte[pos];
                     System.arraycopy(buff, 0, b, 0, pos);
-                    // 可不可以不定buff的大小，通过返回值的方式，返回多大就是多大，带改进
+                    // 可不可以不定buff的大小，通过返回值的方式，返回多大就是多大，待改进
                     buff = new byte[buffSize];
                     pos = 0;
                     upload(b);
