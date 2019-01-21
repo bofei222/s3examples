@@ -92,9 +92,10 @@ public class ToS3 implements StorageFile {
 
             S3ObjectInputStream objectContent = object.getObjectContent();
             long contentLength = object.getObjectMetadata().getContentLength();
-//            BufferedInputStream bis = new BufferedInputStream(objectContent);
+            // 若不用缓存 则 读取数据会出错
+            BufferedInputStream bis = new BufferedInputStream(objectContent);
 
-            int read = objectContent.read(data);
+            int read = bis.read(data);
             System.out.println(contentLength + "contentLength------------------------read" +read);
             length.value = (int) contentLength;
 
