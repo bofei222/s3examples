@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
 import org.omg.CORBA.IntHolder;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -90,11 +91,13 @@ public class ToS3 implements StorageFile {
             object = s3Client.getObject(request);
 
             S3ObjectInputStream objectContent = object.getObjectContent();
-
             long contentLength = object.getObjectMetadata().getContentLength();
+//            BufferedInputStream bis = new BufferedInputStream(objectContent);
+
+            int read = objectContent.read(data);
+            System.out.println(contentLength + "contentLength------------------------read" +read);
             length.value = (int) contentLength;
 
-            objectContent.read(data);
 
             // .....................流 用过一次就没了
 //            S3Util.displayTextInputStream(objectContent);
@@ -111,17 +114,19 @@ public class ToS3 implements StorageFile {
         } catch (IOException e) {
             e.printStackTrace();
             flag = false;
-        } finally {
-            // To ensure that the network connection doesn't remain open, close any open input streams.
-            try {
-                if (object != null) {
-                    object.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return flag;
         }
+//        finally {
+//            // To ensure that the network connection doesn't remain open, close any open input streams.
+//            try {
+//                if (object != null) {
+//                    object.close();
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            return flag;
+//        }
+        return flag;
     }
 
     // 1。说白了，buff大于500M，上传是在write,
