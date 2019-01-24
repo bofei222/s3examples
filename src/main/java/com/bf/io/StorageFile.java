@@ -14,5 +14,7 @@ public interface StorageFile {
 
     boolean write(byte[] data, long off, long size, IntHolder length);
 
+    boolean delete(String id);
+
     boolean close();
 }

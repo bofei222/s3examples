@@ -1,7 +1,5 @@
 package com.bf.io;
 
-import javax.sound.midi.Soundbank;
-
 /**
  * @Author bofei
  * @Date 2019/1/8 12:57
@@ -9,7 +7,7 @@ import javax.sound.midi.Soundbank;
  */
 public class MyUtil {
     public static void main(String[] args) {
-        String s = "bofei的一个9M+9M文件";
+        String s = "cc795aa0-eeb9-4913-b6ae-6599833ece92";
         hash(s);
     }
 
@@ -23,7 +21,7 @@ public class MyUtil {
 //        System.out.println(sum);
 
         String b = String.format("%04d", (sum % 1024) + 1);
-//        System.out.println(b);
+//        System.out.println("" + b);
         return b;
     }
 }

@@ -3,7 +3,9 @@ package com.bf.io;
 
 import org.omg.CORBA.IntHolder;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 
 /**
  * @Author bofei
@@ -82,7 +84,7 @@ public class ToFS implements StorageFile{
                 raf = new RandomAccessFile(file, "rw");
                 // 文件长度，字节数
                 // 无视off参数，直接在文件末尾追加
-    //            off = file.length();
+//                off = file.length();
                 raf.seek(off);
                 raf.write(data, 0, (int)size);
                 length.value = (int)size;
@@ -104,6 +106,20 @@ public class ToFS implements StorageFile{
             flag = false;
         } finally {
             return flag;
+        }
+    }
+
+    @Override
+    public boolean delete(String id) {
+        try {
+            String hash = MyUtil.hash(id);
+            File dir = new File(storageConfig.getDirPath() + "/" + hash);
+            file = new File(dir + "/" + id);
+            boolean delete = file.delete();
+            return delete;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 

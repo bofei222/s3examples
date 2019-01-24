@@ -1,11 +1,9 @@
 package com.bf.io;
 
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.builder.fluent.Configurations;
-import org.apache.commons.configuration2.ex.ConfigurationException;
-
-import java.io.File;
-import java.util.ResourceBundle;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  * @author bofei
@@ -60,18 +58,22 @@ public class StorageConfig {
 
     public Boolean init() {
         try {
-            Configurations configs = new Configurations();
-            Configuration config = configs.properties(new File(propertiesName));
+            Properties config = new Properties();
+            config.load(new FileInputStream(propertiesName));
 
-            if (config.containsKey("dirPath")) dirPath = config.getString("dirPath");
+            if (config.containsKey("dirPath")) dirPath = config.getProperty("dirPath");
 
-            if (config.containsKey("clientRegion")) clientRegion = config.getString("clientRegion");
-            if (config.containsKey("bucketName")) bucketName = config.getString("bucketName");
+            if (config.containsKey("clientRegion")) clientRegion = config.getProperty("clientRegion");
+            if (config.containsKey("bucketName")) bucketName = config.getProperty("bucketName");
             return true;
-        } catch (ConfigurationException e) {
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
+
     }
 
 

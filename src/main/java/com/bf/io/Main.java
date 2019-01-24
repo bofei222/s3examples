@@ -10,6 +10,24 @@ import org.omg.CORBA.IntHolder;
  */
 public class Main {
 
+    // fileAttr
+    public static void main(String[] args) {
+        StorageConfig storageConfig = new StorageConfig("C:\\test\\fs.properties");
+        storageConfig.init();
+        FSFileAttr attr = new FSFileAttr(storageConfig);
+        boolean zxcvbnm = attr.open("zxcvbnm");
+        System.out.println(attr.getLength());
+        System.out.println(attr.getLastModified());
+
+    }
+    // delete
+    public static void main7(String[] args) {
+        StorageConfig storageConfig = new StorageConfig("C:\\test\\fs.properties");
+        storageConfig.init();
+        ToFS toFS = new ToFS(storageConfig);
+        // 删除不用open
+        toFS.delete("zxcvbnm");
+    }
     // read
     // 读指定偏移量off、期望长度的数据size的，实际长度length的数据
     public static void main2(String[] args) {
@@ -29,7 +47,7 @@ public class Main {
     }
 
     // write
-    public static void main(String[] args) {
+    public static void main11(String[] args) {
         String s = "abcdef";
         String s2 = "123456";
         String s3 = "987";
@@ -46,17 +64,16 @@ public class Main {
         boolean open = toFS.open("zxcvbnm", "w");
         IntHolder length = new IntHolder();
 
-        toFS.write(b, 3, b.length, length);
+        toFS.write(b, 1, b.length, length);
 //        System.out.println(length.value);
-//        toFS.write(b2, 3, b2.length, length);
-//        toFS.write(b3, 3, b3.length, length);
+        toFS.write(b2, 3, b2.length, length);
+        toFS.write(b3, 6, b3.length, length);
 
 //        Thread thread = new Thread(new MyWork(toFS, 0));
 //        Thread thread1 = new Thread(new MyWork(toFS, 5242883));
 //        thread.start();
 //        thread1.start();
 //        System.out.println(write);
-        toFS.close();
         System.out.println(length.value);
 
     }
