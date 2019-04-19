@@ -24,9 +24,8 @@ package aws.example.s3;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.ListObjectsV2Request;
 import com.amazonaws.services.s3.model.ListObjectsV2Result;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
-import java.util.List;
 
 /**
  * List objects within an Amazon S3 bucket.
@@ -48,14 +47,26 @@ public class ListObjects
             System.exit(1);
         }
 
-        String bucket_name = "com.bf";
+        String bucket_name = "com.bf2";
 
         System.out.format("Objects in S3 bucket %s:\n", bucket_name);
-        AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.AP_NORTHEAST_1).build();
-        ListObjectsV2Result result = s3.listObjectsV2(bucket_name);
-        List<S3ObjectSummary> objects = result.getObjectSummaries();
-        for (S3ObjectSummary os: objects) {
-            System.out.println("* " + os.getKey());
-        }
+        AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.CN_NORTHWEST_1).build();
+//        ListObjectsV2Result result = s3.listObjectsV2(bucket_name);
+
+        final ListObjectsV2Result result = s3.listObjectsV2(new ListObjectsV2Request()
+                .withPrefix("dev1/贵州荔波七孔风景区宣传片/")
+                .withBucketName("com.bf2")
+                .withDelimiter("/"));
+
+        System.out.println("\tCommon prefixes");
+        result.getCommonPrefixes().forEach(p -> System.out.println("\t\t" + p));
+
+        System.out.println("\tKeys");
+        result.getObjectSummaries().forEach(s -> System.out.println("\t\t" + s.getKey()));
+//
+//        List<S3ObjectSummary> objects = result.getObjectSummaries();
+//        for (S3ObjectSummary os: objects) {
+//            System.out.println("* " + os.getKey());
+//        }
     }
 }

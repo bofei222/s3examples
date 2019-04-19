@@ -4,8 +4,6 @@ package aws.example.s3;
  * @author bofei
  * @date 2019/1/8 20:30
  */
-import java.io.IOException;
-
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
@@ -15,6 +13,8 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.ListObjectsV2Request;
 import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+
+import java.io.IOException;
 
 public class ListKeys {
 
@@ -32,7 +32,7 @@ public class ListKeys {
 
             // maxKeys is set to 2 to demonstrate the use of
             // ListObjectsV2Result.getNextContinuationToken()
-            ListObjectsV2Request req = new ListObjectsV2Request().withBucketName(bucketName).withMaxKeys(2);
+            ListObjectsV2Request req = new ListObjectsV2Request().withPrefix("bofei-test/").withDelimiter("/").withBucketName(bucketName).withMaxKeys(2);
             ListObjectsV2Result result;
 
             do {
